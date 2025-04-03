@@ -1,932 +1,787 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ni Hao Chinese Vocabulary Helper - Nền đỏ</title> {/* Updated Title */}
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ni Hao Chinese Vocabulary Helper - Nền đỏ</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer base {
-            body {
-                /* Changed background to light red */
-                @apply font-sans bg-red-50 text-gray-800;
-            }
-            h1, h2, h3 {
-                @apply font-semibold text-gray-900;
-            }
-            /* Tab Styles - Red Theme */
-            .tab-button {
-                @apply px-4 py-2 rounded-t-lg text-sm font-medium cursor-pointer transition-colors duration-200 ease-in-out border-b-2 border-transparent;
-            }
-            .tab-button.active {
-                /* Active tab with red accent */
-                @apply bg-white text-red-700 border-red-600;
-            }
-            .tab-button:not(.active) {
-                /* Inactive tab styling */
-                @apply text-gray-500 hover:text-red-600 hover:bg-red-100;
-            }
-            .tab-content {
-                /* Content area with subtle border */
-                @apply hidden p-4 md:p-6 bg-white rounded-b-lg rounded-tr-lg shadow border border-red-100;
-            }
-            .tab-content.active {
-                @apply block;
-            }
-            /* Flashcard Styles - Red Theme */
-            .flashcard-container {
-                @apply perspective-1000 w-full max-w-md mx-auto h-64;
-            }
-            .flashcard {
-                @apply relative w-full h-full transform-style-preserve-3d transition-transform duration-700 ease-in-out rounded-lg shadow-lg;
-            }
-            .flashcard.flipped {
-                @apply rotate-y-180;
-            }
-            .flashcard-face {
-                @apply absolute w-full h-full backface-hidden flex flex-col items-center justify-center p-6 rounded-lg border border-gray-200;
-                @apply text-center;
-            }
-            .flashcard-front {
-                /* Updated gradient for front */
-                @apply bg-gradient-to-br from-red-500 to-pink-600 text-white;
-            }
-            .flashcard-back {
-                /* Back remains white for readability */
-                @apply bg-white text-gray-700 rotate-y-180;
-            }
-            .flashcard-char {
-                @apply text-6xl font-bold mb-2;
-            }
-            .flashcard-pinyin {
-                @apply text-xl italic;
-            }
-            .flashcard-meaning {
-                @apply text-lg font-semibold mb-2;
-            }
-            .flashcard-tips {
-                @apply text-sm text-gray-600 overflow-y-auto max-h-24;
-            }
-            /* Lesson Review Table - Red Theme */
-            .vocab-table th, .vocab-table td {
-                 /* Subtle red border */
-                @apply px-4 py-2 border border-red-100 text-sm text-left;
-            }
-            .vocab-table th {
-                 /* Red header background */
-                @apply bg-red-100 font-medium text-red-900;
-            }
-             /* Alternating row colors */
-            .vocab-table tbody tr:nth-child(even) {
-                @apply bg-red-50;
-            }
-             .vocab-table tbody tr:nth-child(odd) {
-                @apply bg-white;
-            }
-            .vocab-table .char-cell {
-                 /* Red character color */
-                @apply text-xl font-medium text-red-700;
-            }
-             /* Sentence Generator - Red Theme */
-            .sentence-part {
-                 /* Red themed sentence parts */
-                @apply inline-block bg-red-100 text-red-900 px-3 py-1 rounded-md mx-1 my-1 text-lg shadow-sm;
-            }
-             /* Style for the random sentence output */
-            #random-sentence-output {
-                @apply mt-4 p-4 border border-red-200 rounded-lg bg-red-50 space-y-2;
-            }
-            .random-word-detail {
-                 @apply inline-block border border-red-200 bg-white rounded px-2 py-1 mr-2 mb-1 text-sm;
-            }
-            .random-word-char {
-                 @apply font-bold text-red-700 text-base;
-            }
-            .random-word-pinyin {
-                 @apply italic text-gray-600;
-            }
-             .random-word-meaning {
-                 @apply text-gray-800;
-             }
-
-             /* Button Styles - Red Theme */
-             .button-primary {
-                 @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
-             }
-             .button-secondary {
-                  @apply inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md shadow-sm text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
-             }
-             .button-tertiary {
-                  @apply inline-flex items-center px-3 py-1 border border-red-500 text-xs font-medium rounded-md shadow-sm text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
-             }
-             .button-link {
-                  @apply px-4 py-2 border border-transparent rounded-md text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50;
-             }
-
-
-            /* Print specific styles */
-             @media print {
-                body {
-                    font-size: 10pt;
-                    color: #000;
-                    background-color: #fff !important; /* Ensure white background for print */
-                }
-                header, footer, .tab-buttons, .flashcard-controls, .sentence-controls, .print-hide, #random-sentence-button {
-                    display: none !important;
-                }
-                .tab-content {
-                    display: block !important;
-                    box-shadow: none;
-                    border: none;
-                    padding: 0;
-                    margin-bottom: 20px;
-                }
-                .vocab-table, .vocab-table th, .vocab-table td {
-                    border: 1px solid #ccc !important; /* Ensure borders print */
-                    background-color: #fff !important; /* No background colors */
-                }
-                 .vocab-table th {
-                     color: #000; /* Black header text */
-                 }
-                 .vocab-table .char-cell {
-                     color: #000; /* Black character text */
-                 }
-                .flashcard-container, .sentence-builder, #random-sentence-output {
-                    display: none !important; /* Hide interactive/generated elements */
-                }
-                h2 {
-                    page-break-before: auto;
-                    page-break-after: avoid;
-                }
-                .vocab-table {
-                     page-break-inside: avoid;
-                }
-                a {
-                    text-decoration: none;
-                    color: #000;
-                }
-                .print-only {
-                    display: block !important;
-                }
-             }
-            .print-only {
-                display: none;
-            }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer base {
+      body {
+        @apply font-sans bg-red-50 text-gray-800;
+      }
+      h1, h2, h3 {
+        @apply font-semibold text-gray-900;
+      }
+      .tab-button {
+        @apply px-4 py-2 rounded-t-lg text-sm font-medium cursor-pointer transition-colors duration-200 ease-in-out border-b-2 border-transparent;
+      }
+      .tab-button.active {
+        @apply bg-white text-red-700 border-red-600;
+      }
+      .tab-button:not(.active) {
+        @apply text-gray-500 hover:text-red-600 hover:bg-red-100;
+      }
+      .tab-content {
+        @apply hidden p-4 md:p-6 bg-white rounded-b-lg rounded-tr-lg shadow border border-red-100;
+      }
+      .tab-content.active {
+        @apply block;
+      }
+      .flashcard-container {
+        @apply perspective-1000 w-full max-w-md mx-auto h-64;
+      }
+      .flashcard {
+        @apply relative w-full h-full transform-style-preserve-3d transition-transform duration-700 ease-in-out rounded-lg shadow-lg;
+      }
+      .flashcard.flipped {
+        @apply rotate-y-180;
+      }
+      .flashcard-face {
+        @apply absolute w-full h-full backface-hidden flex flex-col items-center justify-center p-6 rounded-lg border border-gray-200;
+        @apply text-center;
+      }
+      .flashcard-front {
+        @apply bg-gradient-to-br from-red-500 to-pink-600 text-white;
+      }
+      .flashcard-back {
+        @apply bg-white text-gray-700 rotate-y-180;
+      }
+      .flashcard-char {
+        @apply text-6xl font-bold mb-2;
+      }
+      .flashcard-pinyin {
+        @apply text-xl italic;
+      }
+      .flashcard-meaning {
+        @apply text-lg font-semibold mb-2;
+      }
+      .flashcard-tips {
+        @apply text-sm text-gray-600 overflow-y-auto max-h-24;
+      }
+      .vocab-table th, .vocab-table td {
+        @apply px-4 py-2 border border-red-100 text-sm text-left;
+      }
+      .vocab-table th {
+        @apply bg-red-100 font-medium text-red-900;
+      }
+      .vocab-table tbody tr:nth-child(even) {
+        @apply bg-red-50;
+      }
+      .vocab-table tbody tr:nth-child(odd) {
+        @apply bg-white;
+      }
+      .vocab-table .char-cell {
+        @apply text-xl font-medium text-red-700;
+      }
+      .sentence-part {
+        @apply inline-block bg-red-100 text-red-900 px-3 py-1 rounded-md mx-1 my-1 text-lg shadow-sm;
+      }
+      #random-sentence-output {
+        @apply mt-4 p-4 border border-red-200 rounded-lg bg-red-50 space-y-2;
+      }
+      .random-word-detail {
+        @apply inline-block border border-red-200 bg-white rounded px-2 py-1 mr-2 mb-1 text-sm;
+      }
+      .random-word-char {
+        @apply font-bold text-red-700 text-base;
+      }
+      .random-word-pinyin {
+        @apply italic text-gray-600;
+      }
+      .random-word-meaning {
+        @apply text-gray-800;
+      }
+      .button-primary {
+        @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
+      }
+      .button-secondary {
+        @apply inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md shadow-sm text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
+      }
+      .button-tertiary {
+        @apply inline-flex items-center px-3 py-1 border border-red-500 text-xs font-medium rounded-md shadow-sm text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50;
+      }
+      .button-link {
+        @apply px-4 py-2 border border-transparent rounded-md text-sm font-medium text-red-600 hover:bg-red-100 disabled:opacity-50;
+      }
+      @media print {
+        body {
+          font-size: 10pt;
+          color: #000;
+          background-color: #fff !important;
         }
-        /* Basic 3D Transform Utilities */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-preserve-3d { transform-style: preserve-3d; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        .backface-hidden { backface-visibility: hidden; }
-    </style>
+        header, footer, .tab-buttons, .flashcard-controls, .sentence-controls, .print-hide, #random-sentence-button {
+          display: none !important;
+        }
+        .tab-content {
+          display: block !important;
+          box-shadow: none;
+          border: none;
+          padding: 0;
+          margin-bottom: 20px;
+        }
+        .vocab-table, .vocab-table th, .vocab-table td {
+          border: 1px solid #ccc !important;
+          background-color: #fff !important;
+        }
+        .vocab-table th {
+          color: #000;
+        }
+        .vocab-table .char-cell {
+          color: #000;
+        }
+        .flashcard-container, .sentence-builder, #random-sentence-output {
+          display: none !important;
+        }
+        h2 {
+          page-break-before: auto;
+          page-break-after: avoid;
+        }
+        .vocab-table {
+          page-break-inside: avoid;
+        }
+        a {
+          text-decoration: none;
+          color: #000;
+        }
+        .print-only {
+          display: block !important;
+        }
+      }
+      .print-only {
+        @apply hidden;
+      }
+    }
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-preserve-3d { transform-style: preserve-3d; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .backface-hidden { backface-visibility: hidden; }
+  </style>
 </head>
 <body class="antialiased">
-
-    <header class="bg-gradient-to-r from-red-600 to-red-800 text-white shadow-md sticky top-0 z-10 print-hide">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <h1 class="text-2xl font-bold">Ni Hao Chinese Vocabulary Helper</h1> {/* Removed color class, inherits from parent */}
-            <p class="text-sm text-red-100">Luyện tập từ vựng Bài 1-8</p>
+  <header class="bg-gradient-to-r from-red-600 to-red-800 text-white shadow-md sticky top-0 z-10 print-hide">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <h1 class="text-2xl font-bold">Ni Hao Chinese Vocabulary Helper</h1>
+      <p class="text-sm text-red-100">Luyện tập từ vựng Bài 1-8</p>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div class="mb-4 border-b border-red-200 print-hide">
+      <nav class="flex -mb-px tab-buttons" aria-label="Tabs">
+        <button class="tab-button active" data-tab="lesson-review">Ôn tập bài học</button>
+        <button class="tab-button" data-tab="flashcards">Flashcards</button>
+        <button class="tab-button" data-tab="sentence-generator">Tạo câu</button>
+      </nav>
+    </div>
+    <div id="tab-contents">
+      <div id="lesson-review" class="tab-content active">
+        <h2 class="text-xl font-semibold mb-4 text-red-800">Từ vựng theo bài học</h2>
+        <p class="text-sm text-gray-600 mb-4">Ôn tập từ vựng bao gồm chữ Hán, phiên âm, nghĩa tiếng Việt và mẹo ghi nhớ.</p>
+        <div id="lesson-sections">
+          <p class="text-center text-gray-500 py-4">Đang tải từ vựng...</p>
         </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-
-        <div class="mb-4 border-b border-red-200 print-hide"> {/* Adjusted border color */}
-            <nav class="flex -mb-px tab-buttons" aria-label="Tabs">
-                <button class="tab-button active" data-tab="lesson-review">Ôn tập bài học</button>
-                <button class="tab-button" data-tab="flashcards">Flashcards</button>
-                <button class="tab-button" data-tab="sentence-generator">Tạo câu</button>
-            </nav>
+      </div>
+      <div id="flashcards" class="tab-content">
+        <h2 class="text-xl font-semibold mb-4 text-red-800">Luyện tập với Flashcard</h2>
+        <div class="mb-6 print-hide">
+          <label for="lesson-select-flashcard" class="block text-sm font-medium text-gray-700 mb-2">Chọn (các) bài học:</label>
+          <select id="lesson-select-flashcard" multiple class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"></select>
+          <button id="load-flashcards" class="mt-2 button-primary">Tải bài đã chọn</button>
+          <button id="shuffle-flashcards" class="mt-2 ml-2 button-secondary">Xáo trộn</button>
         </div>
-
-        <div id="tab-contents">
-            <div id="lesson-review" class="tab-content active">
-                <h2 class="text-xl font-semibold mb-4 text-red-800">Từ vựng theo bài học</h2> {/* Red heading */}
-                <p class="text-sm text-gray-600 mb-4">Ôn tập từ vựng bao gồm chữ Hán, phiên âm, nghĩa tiếng Việt và mẹo ghi nhớ.</p>
-                <div id="lesson-sections">
-                    <p class="text-center text-gray-500 py-4">Đang tải từ vựng...</p>
+        <div id="flashcard-area" class="text-center">
+          <p id="flashcard-placeholder" class="text-gray-500">Chọn (các) bài học và nhấn 'Tải bài đã chọn' để bắt đầu.</p>
+          <div id="flashcard-ui" class="hidden">
+            <div class="flashcard-container mb-4" onclick="flipCard()">
+              <div id="flashcard" class="flashcard">
+                <div class="flashcard-face flashcard-front">
+                  <div id="flashcard-front-content"></div>
                 </div>
-            </div>
-
-            <div id="flashcards" class="tab-content">
-                 <h2 class="text-xl font-semibold mb-4 text-red-800">Luyện tập với Flashcard</h2> {/* Red heading */}
-                 <div class="mb-6 print-hide">
-                    <label for="lesson-select-flashcard" class="block text-sm font-medium text-gray-700 mb-2">Chọn (các) bài học:</label>
-                    <select id="lesson-select-flashcard" multiple class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                        {/* Options added by JS */}
-                    </select>
-                    {/* Updated button classes */}
-                    <button id="load-flashcards" class="mt-2 button-primary">
-                        Tải bài đã chọn
-                    </button>
-                     <button id="shuffle-flashcards" class="mt-2 ml-2 button-secondary">
-                        Xáo trộn
-                    </button>
-                 </div>
-
-                 <div id="flashcard-area" class="text-center">
-                    <p id="flashcard-placeholder" class="text-gray-500">Chọn (các) bài học và nhấn 'Tải bài đã chọn' để bắt đầu.</p>
-                    <div id="flashcard-ui" class="hidden">
-                        <div class="flashcard-container mb-4" onclick="flipCard()">
-                            <div id="flashcard" class="flashcard">
-                                <div class="flashcard-face flashcard-front">
-                                    <div id="flashcard-front-content"></div>
-                                </div>
-                                <div class="flashcard-face flashcard-back">
-                                    <div id="flashcard-back-content"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flashcard-controls print-hide space-x-2">
-                            {/* Updated button classes */}
-                            <button id="prev-card" class="button-secondary">Trước</button>
-                            <span id="card-counter" class="text-sm text-gray-600 align-middle">0 / 0</span>
-                            <button id="next-card" class="button-secondary">Sau</button>
-                            <button onclick="flipCard()" class="button-link">Lật</button>
-                        </div>
-                    </div>
-                 </div>
-            </div>
-
-            <div id="sentence-generator" class="tab-content">
-                <h2 class="text-xl font-semibold mb-4 text-red-800">Tạo câu cơ bản</h2> {/* Red heading */}
-                <p class="text-sm text-gray-600 mb-4">Kết hợp các từ để tạo thành câu đơn giản hoặc tạo câu ngẫu nhiên.</p> {/* Updated description */}
-
-                {/* Manual Sentence Builder */}
-                <div class="sentence-builder space-y-4 print-hide mb-8 border-b border-red-200 pb-6">
-                     <h3 class="text-lg font-medium text-gray-800 mb-2">Tạo câu thủ công:</h3>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Chủ ngữ:</label>
-                        <select id="sg-subject" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                            <option value="">-- Chọn --</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Động từ:</label>
-                        <select id="sg-verb" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                            <option value="">-- Chọn --</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tân ngữ/Bổ ngữ:</label>
-                        <select id="sg-object" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                             <option value="">-- Chọn --</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Trợ từ/Khác:</label>
-                        <select id="sg-other" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                             <option value="">-- Chọn --</option>
-                        </select>
-                    </div>
-
-                    <div class="mt-6 p-4 bg-red-50 rounded-lg"> {/* Light red background */}
-                        <h4 class="text-md font-medium text-gray-800 mb-2">Câu đã tạo (thủ công):</h4>
-                        <div id="generated-sentence" class="text-xl font-semibold text-red-800 min-h-[3rem] flex items-center flex-wrap">
-                            <span class="text-gray-400 italic">Chọn các từ ở trên để tạo câu.</span>
-                        </div>
-                         {/* Updated button class */}
-                         <button id="clear-sentence" class="mt-3 button-tertiary">
-                            Xóa
-                        </button>
-                    </div>
+                <div class="flashcard-face flashcard-back">
+                  <div id="flashcard-back-content"></div>
                 </div>
-
-                 {/* Random Sentence Generator */}
-                 <div class="random-sentence-generator print-hide mt-6">
-                     <h3 class="text-lg font-medium text-gray-800 mb-2">Tạo câu ngẫu nhiên:</h3>
-                     {/* Updated button class */}
-                     <button id="random-sentence-button" class="button-primary">
-                         Tạo câu ngẫu nhiên
-                     </button>
-                     {/* Area to display the random sentence with details */}
-                     <div id="random-sentence-output" class="mt-4 min-h-[5rem]">
-                         <p class="text-gray-500 italic">Nhấn nút để tạo câu ngẫu nhiên...</p>
-                     </div>
-                 </div>
-
-                 <div class="mt-6 print-only">
-                    <p class="text-gray-600 italic">Chức năng tạo câu là tương tác và không có sẵn trong chế độ xem bản in.</p>
-                </div>
+              </div>
             </div>
+            <div class="flashcard-controls print-hide space-x-2">
+              <button id="prev-card" class="button-secondary">Trước</button>
+              <span id="card-counter" class="text-sm text-gray-600 align-middle">0 / 0</span>
+              <button id="next-card" class="button-secondary">Sau</button>
+              <button onclick="flipCard()" class="button-link">Lật</button>
+            </div>
+          </div>
         </div>
-
-    </main>
-
-    <footer class="bg-red-100 mt-12 print-hide"> {/* Light red background */}
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-red-800"> {/* Red text */}
-            Tạo bởi Huỳnh Duy Khánh | Công cụ hỗ trợ học từ vựng
+      </div>
+      <div id="sentence-generator" class="tab-content">
+        <h2 class="text-xl font-semibold mb-4 text-red-800">Tạo câu cơ bản</h2>
+        <p class="text-sm text-gray-600 mb-4">Kết hợp các từ để tạo thành câu đơn giản hoặc tạo câu ngẫu nhiên.</p>
+        <div class="sentence-builder space-y-4 print-hide mb-8 border-b border-red-200 pb-6">
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Tạo câu thủ công:</h3>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Chủ ngữ:</label>
+            <select id="sg-subject" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
+              <option value="">-- Chọn --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Động từ:</label>
+            <select id="sg-verb" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
+              <option value="">-- Chọn --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tân ngữ/Bổ ngữ:</label>
+            <select id="sg-object" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
+              <option value="">-- Chọn --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Trợ từ/Khác:</label>
+            <select id="sg-other" class="sg-select mt-1 block w-full md:w-1/2 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
+              <option value="">-- Chọn --</option>
+            </select>
+          </div>
+          <div class="mt-6 p-4 bg-red-50 rounded-lg">
+            <h4 class="text-md font-medium text-gray-800 mb-2">Câu đã tạo (thủ công):</h4>
+            <div id="generated-sentence" class="text-xl font-semibold text-red-800 min-h-[3rem] flex items-center flex-wrap">
+              <span class="text-gray-400 italic">Chọn các từ ở trên để tạo câu.</span>
+            </div>
+            <button id="clear-sentence" class="mt-3 button-tertiary">Xóa</button>
+          </div>
         </div>
-    </footer>
+        <div class="random-sentence-generator print-hide mt-6">
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Tạo câu ngẫu nhiên:</h3>
+          <button id="random-sentence-button" class="button-primary">Tạo câu ngẫu nhiên</button>
+          <div id="random-sentence-output" class="mt-4 min-h-[5rem]">
+            <p class="text-gray-500 italic">Nhấn nút để tạo câu ngẫu nhiên...</p>
+          </div>
+        </div>
+        <div class="mt-6 print-only">
+          <p class="text-gray-600 italic">Chức năng tạo câu là tương tác và không có sẵn trong chế độ xem bản in.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-red-100 mt-12 print-hide">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-red-800">
+      Tạo bởi Huỳnh Duy Khánh | Công cụ hỗ trợ học từ vựng
+    </div>
+  </footer>
+  <script>
+    // --- Vocabulary Data: Bài 1 đến bài 8 ---
+    const vocabularyData = {
+      1: {
+        title: "Bài 1: 你好 (Nǐ hǎo – Xin chào)",
+        words: [
+          { char: "你", pinyin: "nǐ", meaning: "bạn (ngôi 2 số ít)", tips: "亻 + 尔" },
+          { char: "好", pinyin: "hǎo", meaning: "tốt, khỏe", tips: "女 + 子" },
+          { char: "爸", pinyin: "bà", meaning: "bố, ba", tips: "父 + 巴" },
+          { char: "妈", pinyin: "mā", meaning: "mẹ", tips: "女 + 马" },
+          { char: "他", pinyin: "tā", meaning: "anh ấy", tips: "亻 + 也" },
+          { char: "她", pinyin: "tā", meaning: "cô ấy", tips: "女 + 也" },
+          { char: "哥", pinyin: "gē", meaning: "anh trai", tips: "可 hoặc 口" },
+          { char: "弟", pinyin: "dì", meaning: "em trai", tips: "弓 + nét dài" },
+          { char: "妹", pinyin: "mèi", meaning: "em gái", tips: "女 + 未" },
+          { char: "白", pinyin: "bái", meaning: "trắng", tips: "日 có chấm" },
+          { char: "女", pinyin: "nǚ", meaning: "nữ, con gái", tips: "dáng ngồi" },
+          { char: "马", pinyin: "mǎ", meaning: "ngựa", tips: "giản thể của 馬" }
+        ]
+      },
+      2: {
+        title: "Bài 2: 汉语不太难 (Hànyǔ bù tài nán – Tiếng Hán không khó lắm)",
+        words: [
+          { char: "汉", pinyin: "hàn", meaning: "Hán", tips: "氵 + 又" },
+          { char: "语", pinyin: "yǔ", meaning: "ngữ (ngôn ngữ)", tips: "讠 + 五 + 口" },
+          { char: "不", pinyin: "bù", meaning: "không", tips: "nét ngang phủ định" },
+          { char: "太", pinyin: "tài", meaning: "quá, rất", tips: "大 + dấu chấm" },
+          { char: "难", pinyin: "nán", meaning: "khó", tips: "隹 + 又" },
+          { char: "忙", pinyin: "máng", meaning: "bận", tips: "忄 + 亡" },
+          { char: "吗", pinyin: "ma", meaning: "trợ từ nghi vấn", tips: "口 + 马" },
+          { char: "很", pinyin: "hěn", meaning: "rất", tips: "彳 + 艮" }
+        ]
+      },
+      3: {
+        title: "Bài 3: 明天见 (Míngtiān jiàn - Hẹn gặp ngày mai)",
+        words: [
+          { char: "明", pinyin: "míng", meaning: "sáng; ngày mai", tips: "日 + 月" },
+          { char: "天", pinyin: "tiān", meaning: "trời, ngày", tips: "大 + nét ngang" },
+          { char: "见", pinyin: "jiàn", meaning: "gặp, thấy", tips: "mục + 儿" },
+          { char: "英语", pinyin: "Yīngyǔ", meaning: "tiếng Anh", tips: "英 + 语" },
+          { char: "阿拉伯语", pinyin: "Ālābóyǔ", meaning: "tiếng Ả Rập", tips: "阿 + 拉 + 伯 + 语" },
+          { char: "德国", pinyin: "Déguó", meaning: "nước Đức", tips: "德 + 国" },
+          { char: "法语", pinyin: "Fǎyǔ", meaning: "tiếng Pháp", tips: "法 + 语" },
+          { char: "俄语", pinyin: "Éyǔ", meaning: "tiếng Nga", tips: "俄 + 语" },
+          { char: "韩语", pinyin: "Hányǔ", meaning: "tiếng Hàn", tips: "韩 + 语" },
+          { char: "日语", pinyin: "Rìyǔ", meaning: "tiếng Nhật", tips: "日 + 语" },
+          { char: "西班牙语", pinyin: "Xībānyáyǔ", meaning: "tiếng Tây Ban Nha", tips: "西 + 班 + 牙 + 语" },
+          { char: "学", pinyin: "xué", meaning: "học", tips: "冖 + 子" },
+          { char: "对不起", pinyin: "duìbuqǐ", meaning: "xin lỗi", tips: "对 + 不 + 起" },
+          { char: "没关系", pinyin: "méi guānxi", meaning: "không sao", tips: "没 + 关 + 系" },
+          { char: "钱", pinyin: "qián", meaning: "tiền", tips: "钅 + 戋" },
+          { char: "取", pinyin: "qǔ", meaning: "lấy, rút", tips: "耳 + 又" },
+          { char: "银行", pinyin: "yínháng", meaning: "ngân hàng", tips: "银 + 行" }
+        ]
+      },
+      4: {
+        title: "Bài 4: 你去哪儿 (Nǐ qù nǎr - Bạn đi đâu?)",
+        words: [
+          { char: "去", pinyin: "qù", meaning: "đi", tips: "土 + 厶" },
+          { char: "哪儿", pinyin: "nǎr", meaning: "ở đâu", tips: "哪 + 儿" },
+          { char: "今天", pinyin: "jīntiān", meaning: "hôm nay", tips: "今 + 天" },
+          { char: "昨天", pinyin: "zuótiān", meaning: "hôm qua", tips: "昨 + 天" },
+          { char: "星期", pinyin: "xīngqī", meaning: "tuần", tips: "星 + 期" },
+          { char: "星期一", pinyin: "xīngqī yī", meaning: "Thứ hai", tips: "星期 + 一" },
+          { char: "星期二", pinyin: "xīngqī èr", meaning: "Thứ ba", tips: "星期 + 二" },
+          { char: "星期三", pinyin: "xīngqī sān", meaning: "Thứ tư", tips: "星期 + 三" },
+          { char: "星期四", pinyin: "xīngqī sì", meaning: "Thứ năm", tips: "星期 + 四" },
+          { char: "星期五", pinyin: "xīngqī wǔ", meaning: "Thứ sáu", tips: "星期 + 五" },
+          { char: "星期六", pinyin: "xīngqī liù", meaning: "Thứ bảy", tips: "星期 + 六" },
+          { char: "星期天", pinyin: "xīngqī tiān", meaning: "Chủ nhật", tips: "星期 + 天" },
+          { char: "星期日", pinyin: "xīngqī rì", meaning: "Chủ nhật", tips: "星期 + 日" },
+          { char: "几", pinyin: "jǐ", meaning: "mấy, vài", tips: "hình ghế nhỏ" },
+          { char: "二", pinyin: "èr", meaning: "hai", tips: "2 nét ngang" },
+          { char: "三", pinyin: "sān", meaning: "ba", tips: "3 nét ngang" },
+          { char: "四", pinyin: "sì", meaning: "bốn", tips: "囗 + 儿" },
+          { char: "我", pinyin: "wǒ", meaning: "tôi", tips: "手 cầm 戈" },
+          { char: "回", pinyin: "huí", meaning: "trở về", tips: "囗" },
+          { char: "学校", pinyin: "xuéxiào", meaning: "trường học", tips: "学 + 校" },
+          { char: "再见", pinyin: "zàijiàn", meaning: "tạm biệt", tips: "再 + 见" }
+        ]
+      },
+      5: {
+        title: "Bài 5: 这是王老师 (Zhè shì Wáng lǎoshī - Đây là thầy Vương)",
+        words: [
+          { char: "这", pinyin: "zhè", meaning: "đây, này", tips: "辶 + 文" },
+          { char: "是", pinyin: "shì", meaning: "là", tips: "日 + 正" },
+          { char: "老师", pinyin: "lǎoshī", meaning: "thầy/cô giáo", tips: "老 + 师" },
+          { char: "您", pinyin: "nín", meaning: "ngài", tips: "你 + 心" },
+          { char: "请", pinyin: "qǐng", meaning: "mời", tips: "讠 + 青" },
+          { char: "进", pinyin: "jìn", meaning: "vào", tips: "辶 + 井" },
+          { char: "坐", pinyin: "zuò", meaning: "ngồi", tips: "人 + 人 + 土" },
+          { char: "喝", pinyin: "hē", meaning: "uống", tips: "口 + 曷" },
+          { char: "茶", pinyin: "chá", meaning: "trà", tips: "艹 + 人 + 木" },
+          { char: "谢谢", pinyin: "xièxie", meaning: "cảm ơn", tips: "讠 + 身 + 寸" },
+          { char: "不客气", pinyin: "bú kèqi", meaning: "đừng khách sáo", tips: "不 + 客气" },
+          { char: "客气", pinyin: "kèqi", meaning: "khách sáo", tips: "客 + 气" },
+          { char: "工作", pinyin: "gōngzuò", meaning: "công việc; làm việc", tips: "工 + 作" },
+          { char: "身体", pinyin: "shēntǐ", meaning: "thân thể, sức khỏe", tips: "身 + 体" }
+        ]
+      },
+      6: {
+        title: "Bài 6: 我学习汉语 (Wǒ xuéxí Hànyǔ - Tôi học tiếng Hán)",
+        words: [
+          { char: "学习", pinyin: "xuéxí", meaning: "học tập", tips: "学 + 习" },
+          { char: "觉得", pinyin: "juéde", meaning: "cảm thấy", tips: "觉 + 得" },
+          { char: "语法", pinyin: "yǔfǎ", meaning: "ngữ pháp", tips: "语 + 法" },
+          { char: "听", pinyin: "tīng", meaning: "nghe", tips: "口 + 斤" },
+          { char: "说", pinyin: "shuō", meaning: "nói", tips: "讠 + 兑" },
+          { char: "比较", pinyin: "bǐjiào", meaning: "tương đối, khá", tips: "比 + 较" },
+          { char: "容易", pinyin: "róngyì", meaning: "dễ dàng", tips: "容 + 易" },
+          { char: "读", pinyin: "dú", meaning: "đọc", tips: "讠 + 卖" },
+          { char: "写", pinyin: "xiě", meaning: "viết", tips: "冖 + phần dưới phức tạp" },
+          { char: "但是", pinyin: "dànshì", meaning: "nhưng", tips: "但 + 是" },
+          { char: "给", pinyin: "gěi", meaning: "cho", tips: "纟 + 合" },
+          { char: "新", pinyin: "xīn", meaning: "mới", tips: "立 + 木 + 斤" },
+          { char: "同学", pinyin: "tóngxué", meaning: "bạn học", tips: "同 + 学" },
+          { char: "同屋", pinyin: "tóngwū", meaning: "bạn cùng phòng", tips: "同 + 屋" },
+          { char: "班", pinyin: "bān", meaning: "lớp", tips: "王 x2 + 刂" },
+          { char: "北京语言大学", pinyin: "Běijīng Yǔyán Dàxué", meaning: "Đại học Ngôn ngữ Bắc Kinh", tips: "北京 + 语言 + 大学" },
+          { char: "林娜", pinyin: "Lín Nà", meaning: "Lâm Na", tips: "林 + 娜" }
+        ]
+      },
+      7: {
+        title: "Bài 7: 你吃什么 (Nǐ chī shénme - Bạn ăn gì?)",
+        words: [
+          { char: "中午", pinyin: "zhōngwǔ", meaning: "buổi trưa", tips: "中 + 午" },
+          { char: "吃", pinyin: "chī", meaning: "ăn", tips: "口 + 乞" },
+          { char: "饭", pinyin: "fàn", meaning: "cơm", tips: "饣 + 反" },
+          { char: "食堂", pinyin: "shítáng", meaning: "nhà ăn", tips: "食 + 堂" },
+          { char: "馒头", pinyin: "mántou", meaning: "bánh màn thầu", tips: "馒 + 头" },
+          { char: "米饭", pinyin: "mǐfàn", meaning: "cơm (gạo)", tips: "米 + 饭" },
+          { char: "米", pinyin: "mǐ", meaning: "gạo", tips: "hình bông lúa" },
+          { char: "要", pinyin: "yào", meaning: "muốn, cần", tips: "西 + 女" },
+          { char: "个", pinyin: "ge", meaning: "cái, chiếc", tips: "人 + 丨" },
+          { char: "碗", pinyin: "wǎn", meaning: "bát", tips: "石 + 宛" },
+          { char: "鸡蛋", pinyin: "jīdàn", meaning: "trứng gà", tips: "鸡 + 蛋" },
+          { char: "鸡", pinyin: "jī", meaning: "gà", tips: "又 + 鸟" },
+          { char: "蛋", pinyin: "dàn", meaning: "trứng", tips: "疋 + 虫" },
+          { char: "汤", pinyin: "tāng", meaning: "canh", tips: "氵 + 昜" },
+          { char: "啤酒", pinyin: "píjiǔ", meaning: "bia", tips: "啤 + 酒" },
+          { char: "酒", pinyin: "jiǔ", meaning: "rượu", tips: "氵 + 酉" },
+          { char: "这些", pinyin: "zhèxiē", meaning: "những cái này", tips: "这 + 些" },
+          { char: "一些", pinyin: "yìxiē", meaning: "một ít, một vài", tips: "一 + 些" },
+          { char: "那些", pinyin: "nàxiē", meaning: "những cái kia", tips: "那 + 些" },
+          { char: "饺子", pinyin: "jiǎozi", meaning: "bánh chẻo", tips: "饺 + 子" },
+          { char: "包子", pinyin: "bāozi", meaning: "bánh bao", tips: "包 + 子" },
+          { char: "面条儿", pinyin: "miàntiáor", meaning: "mì sợi", tips: "面 + 条 + 儿" }
+        ]
+      },
+      8: {
+        title: "Bài 8: 苹果一斤多少钱 (Píngguǒ yì jīn duōshao qián - Táo một cân bao nhiêu tiền?)",
+        words: [
+          { char: "苹果", pinyin: "píngguǒ", meaning: "quả táo", tips: "苹 + 果" },
+          { char: "斤", pinyin: "jīn", meaning: "cân", tips: "hình cái rìu" },
+          { char: "多少", pinyin: "duōshao", meaning: "bao nhiêu", tips: "多 + 少" },
+          { char: "多", pinyin: "duō", meaning: "nhiều", tips: "夕 + 夕" },
+          { char: "少", pinyin: "shǎo", meaning: "ít", tips: "小 + 丿" },
+          { char: "块", pinyin: "kuài", meaning: "đồng; miếng", tips: "土 + 夬" },
+          { char: "元", pinyin: "yuán", meaning: "đồng", tips: "二 + 儿" },
+          { char: "角", pinyin: "jiǎo", meaning: "hào", tips: "hình sừng" },
+          { char: "毛", pinyin: "máo", meaning: "hào; lông", tips: "hình lông" },
+          { char: "分", pinyin: "fēn", meaning: "xu; phút", tips: "八 + 刀" },
+          { char: "还", pinyin: "hái", meaning: "còn, vẫn", tips: "辶 + 不" },
+          { char: "别的", pinyin: "biéde", meaning: "cái khác", tips: "别 + 的" },
+          { char: "橘子", pinyin: "júzi", meaning: "quả quýt", tips: "橘 + 子" },
+          { char: "怎么", pinyin: "zěnme", meaning: "như thế nào", tips: "怎 + 么" },
+          { char: "卖", pinyin: "mài", meaning: "bán", tips: "士 + 买" },
+          { char: "两", pinyin: "liǎng", meaning: "hai", tips: "dạng của 二" },
+          { char: "一共", pinyin: "yígòng", meaning: "tổng cộng", tips: "一 + 共" },
+          { char: "找", pinyin: "zhǎo", meaning: "tìm; trả lại", tips: "扌 + 戈" }
+        ]
+      }
+    };
 
-    <script>
-        // --- Vocabulary Data (Lessons 1-8 COMPLETE) ---
-        const vocabularyData = {
-            // (Data remains the same as previous version - keeping it concise here)
-            1: {
-                title: "Bài 1: 你好 (Nǐ hǎo – Xin chào)",
-                words: [
-                    { char: "你", pinyin: "nǐ", meaning: "bạn (ngôi 2 số ít)", tips: "亻 (nhân đứng) + 尔 (nhĩ - giống tai) => người đối diện => bạn." },
-                    { char: "好", pinyin: "hǎo", meaning: "tốt, khỏe", tips: "女 (nữ) + 子 (tử - con trai) => điều tốt lành." },
-                    { char: "爸", pinyin: "bà", meaning: "bố, ba", tips: "父 (phụ - cha) + 巴 (ba - âm)." },
-                    { char: "妈", pinyin: "mā", meaning: "mẹ", tips: "女 (nữ) + 马 (mǎ - ngựa, tạo âm)." },
-                    { char: "他", pinyin: "tā", meaning: "anh ấy", tips: "亻 (nhân đứng) + 也 (dã) => người kia." },
-                    { char: "她", pinyin: "tā", meaning: "cô ấy", tips: "女 (nữ) + 也 (dã) => người con gái." },
-                    { char: "哥", pinyin: "gē", meaning: "anh trai", tips: "Hai bộ 可 (khả) hoặc 口 (khẩu) chồng lên nhau => anh trai nói nhiều." },
-                    { char: "弟", pinyin: "dì", meaning: "em trai", tips: "弓 (cung) + nét dài => em trai nghịch ngợm." },
-                    { char: "妹", pinyin: "mèi", meaning: "em gái", tips: "女 (nữ) + 未 (vị - chưa) => em gái nhỏ tuổi." },
-                    { char: "白", pinyin: "bái", meaning: "trắng", tips: "Dấu chấm trên 日 (nhật - mặt trời) => ánh sáng => trắng." },
-                    { char: "女", pinyin: "nǚ", meaning: "nữ, con gái", tips: "Dáng ngồi phụ nữ khoanh tay." },
-                    { char: "马", pinyin: "mǎ", meaning: "ngựa", tips: "Giản thể của 馬, mô phỏng đầu + bờm ngựa." }
-                ]
-            },
-            2: {
-                title: "Bài 2: 汉语不太难 (Hànyǔ bù tài nán – Tiếng Hán không khó lắm)",
-                words: [
-                    { char: "汉", pinyin: "hàn", meaning: "Hán (TQ)", tips: "氵 (thủy - nước) + 又 (hựu - lại) => sông Hán, dân tộc Hán." },
-                    { char: "语", pinyin: "yǔ", meaning: "ngữ (ngôn ngữ)", tips: "讠 (ngôn) + 五 (ngũ) + 口 (khẩu) => lời nói từ năm miệng => ngôn ngữ." },
-                    { char: "不", pinyin: "bù", meaning: "không", tips: "Một nét ngang biểu thị sự phủ định." },
-                    { char: "太", pinyin: "tài", meaning: "quá, rất", tips: "大 (đại - to) + dấu chấm => quá to => quá, rất." },
-                    { char: "难", pinyin: "nán", meaning: "khó", tips: "隹 (chuy - chim đuôi ngắn) + 又 (hựu - lại/tay) => bắt chim là khó." },
-                    { char: "忙", pinyin: "máng", meaning: "bận", tips: "忄 (tâm đứng) + 亡 (vong - mất) => tim lo lắng sắp 'mất' đi vì bận." },
-                    { char: "吗", pinyin: "ma", meaning: "trợ từ nghi vấn", tips: "口 (khẩu) + 马 (mǎ - ngựa, âm) => dùng miệng hỏi." },
-                    { char: "很", pinyin: "hěn", meaning: "rất", tips: "彳 (xích - bước chân trái) + 艮 (cấn - dừng lại) => dừng lại nhấn mạnh 'rất'." }
-                ]
-            },
-            3: {
-                title: "Bài 3: 明天见 (Míngtiān jiàn - Hẹn gặp ngày mai)",
-                words: [
-                    { char: "明", pinyin: "míng", meaning: "sáng; ngày mai", tips: "日 (nhật - mặt trời) + 月 (nguyệt - mặt trăng) => sáng tỏ." },
-                    { char: "天", pinyin: "tiān", meaning: "trời, ngày", tips: "大 (đại - to) + nét ngang trên => bầu trời." },
-                    { char: "见", pinyin: "jiàn", meaning: "gặp, thấy", tips: "目 (mục - mắt) + 儿 (nhân đi) => dùng mắt thấy, đi gặp." },
-                    { char: "英语", pinyin: "Yīngyǔ", meaning: "tiếng Anh", tips: "英 (Anh - nước Anh, 艹 thảo) + 语 (ngữ)." },
-                    { char: "阿拉伯语", pinyin: "Ālābóyǔ", meaning: "tiếng Ả Rập", tips: "阿 + 拉 + 伯 + 语." },
-                    { char: "德国", pinyin: "Déguó", meaning: "nước Đức", tips: "德 (Đức, 彳 xích) + 国 (quốc, 囗 vi)." },
-                    { char: "法语", pinyin: "Fǎyǔ", meaning: "tiếng Pháp", tips: "法 (Pháp, 氵 thủy) + 语." },
-                    { char: "俄语", pinyin: "Éyǔ", meaning: "tiếng Nga", tips: "俄 (Nga, 亻 nhân đứng) + 语." },
-                    { char: "韩语", pinyin: "Hányǔ", meaning: "tiếng Hàn", tips: "韩 (Hàn, 韦 vi) + 语." },
-                    { char: "日语", pinyin: "Rìyǔ", meaning: "tiếng Nhật", tips: "日 (Nhật - mặt trời) + 语." },
-                    { char: "西班牙语", pinyin: "Xībānyáyǔ", meaning: "tiếng Tây Ban Nha", tips: "西 + 班 + 牙 + 语." },
-                    { char: "学", pinyin: "xué", meaning: "học", tips: "冖 (mịch - mái nhà) + 子 (tử - trẻ em) => trẻ em học dưới mái nhà." },
-                    { char: "对不起", pinyin: "duìbuqǐ", meaning: "xin lỗi", tips: "对 (đối) + 不 (bất) + 起 (khởi) => không thể đối mặt => xin lỗi." },
-                    { char: "没关系", pinyin: "méi guānxi", meaning: "không sao", tips: "没 (một - không có, 氵 thủy) + 关 (quan) + 系 (hệ, 糸 mịch) => không liên quan, không sao." },
-                    { char: "钱", pinyin: "qián", meaning: "tiền", tips: "钅 (kim) + 戋 (tiễn) => tiền làm từ kim loại." },
-                    { char: "取", pinyin: "qǔ", meaning: "lấy, rút (tiền)", tips: "耳 (nhĩ - tai) + 又 (hựu - tay) => dùng tay lấy (nghe ngóng để lấy)." },
-                    { char: "银行", pinyin: "yínháng", meaning: "ngân hàng", tips: "银 (ngân - bạc, 钅 kim) + 行 (hành - đi, cửa hàng) => nơi giao dịch bạc." }
-                ]
-            },
-             4: {
-                title: "Bài 4: 你去哪儿 (Nǐ qù nǎr - Bạn đi đâu?)",
-                 words: [
-                    { char: "去", pinyin: "qù", meaning: "đi", tips: "土 (thổ - đất) + 厶 (khư - riêng tư) => rời chỗ riêng đi trên đất." },
-                    { char: "哪儿", pinyin: "nǎr", meaning: "ở đâu", tips: "哪 (nả - nào, 口 khẩu) + 儿 (nhi - nối âm)." },
-                    { char: "今天", pinyin: "jīntiān", meaning: "hôm nay", tips: "今 (kim - nay) + 天 (thiên - ngày)." },
-                    { char: "昨天", pinyin: "zuótiān", meaning: "hôm qua", tips: "昨 (tạc - qua, 日 nhật + 乍 tác) + 天 (thiên - ngày)." },
-                    { char: "星期", pinyin: "xīngqī", meaning: "tuần", tips: "星 (tinh - sao, 日 nhật) + 期 (kỳ, 月 nguyệt)." },
-                    { char: "星期一", pinyin: "xīngqī yī", meaning: "Thứ hai", tips: "星期 + 一 (nhất)." },
-                    { char: "星期二", pinyin: "xīngqī èr", meaning: "Thứ ba", tips: "星期 + 二 (nhị)." },
-                    { char: "星期三", pinyin: "xīngqī sān", meaning: "Thứ tư", tips: "星期 + 三 (tam)." },
-                    { char: "星期四", pinyin: "xīngqī sì", meaning: "Thứ năm", tips: "星期 + 四 (tứ)." },
-                    { char: "星期五", pinyin: "xīngqī wǔ", meaning: "Thứ sáu", tips: "星期 + 五 (ngũ)." },
-                    { char: "星期六", pinyin: "xīngqī liù", meaning: "Thứ bảy", tips: "星期 + 六 (lục)." },
-                    { char: "星期天", pinyin: "xīngqī tiān", meaning: "Chủ nhật", tips: "星期 + 天 (thiên - trời)." },
-                    { char: "星期日", pinyin: "xīngqī rì", meaning: "Chủ nhật", tips: "星期 + 日 (nhật - mặt trời)." },
-                    { char: "几", pinyin: "jǐ", meaning: "mấy, vài", tips: "Hình cái ghế nhỏ/móc câu => hỏi 'mấy?'." },
-                    { char: "二", pinyin: "èr", meaning: "hai, số 2", tips: "2 nét ngang." },
-                    { char: "三", pinyin: "sān", meaning: "ba, số 3", tips: "3 nét ngang." },
-                    { char: "四", pinyin: "sì", meaning: "bốn, số 4", tips: "囗 (vi - vây quanh) + 儿 (nhân đi - biến thể) => 4 góc." },
-                    { char: "我", pinyin: "wǒ", meaning: "tôi", tips: "手 (thủ - tay) cầm 戈 (qua - vũ khí) => bản ngã, tôi." },
-                    { char: "回", pinyin: "huí", meaning: "trở về", tips: "囗 (vi - vây quanh) => vòng tròn khép kín => quay về." },
-                    { char: "学校", pinyin: "xuéxiào", meaning: "trường học", tips: "学 (học) + 校 (hiệu - trường, 木 mộc + 交 giao)." },
-                    { char: "再见", pinyin: "zàijiàn", meaning: "tạm biệt", tips: "再 (tái - lần nữa) + 见 (kiến - gặp)." }
-                ]
-            },
-             5: {
-                title: "Bài 5: 这是王老师 (Zhè shì Wáng lǎoshī - Đây là thầy Vương)",
-                 words: [
-                    { char: "这", pinyin: "zhè", meaning: "đây, này", tips: "辶 (sước - đi) + 文 (văn) => mang văn bản đến 'đây'." },
-                    { char: "是", pinyin: "shì", meaning: "là", tips: "日 (nhật - mặt trời) + 正 (chính) => mặt trời ngay thẳng => là sự thật." },
-                    { char: "老师", pinyin: "lǎoshī", meaning: "thầy/cô giáo", tips: "老 (lão - già, 耂) + 师 (sư - thầy, 巾 cân - khăn) => người thầy già." },
-                    { char: "您", pinyin: "nín", meaning: "ngài (lịch sự)", tips: "你 (nǐ - bạn) + 心 (tâm - trái tim) => tôn kính từ tâm." },
-                    { char: "请", pinyin: "qǐng", meaning: "mời", tips: "讠 (ngôn) + 青 (thanh - xanh, âm) => lời mời nhẹ nhàng." },
-                    { char: "进", pinyin: "jìn", meaning: "vào", tips: "辶 (sước - đi) + 井 (tỉnh - giếng) => đi vào." },
-                    { char: "坐", pinyin: "zuò", meaning: "ngồi", tips: "人 (nhân) + 人 (nhân) + 土 (thổ - đất) => người ngồi trên đất." },
-                    { char: "喝", pinyin: "hē", meaning: "uống", tips: "口 (khẩu) + 曷 (hạt - sao mà) => miệng uống." },
-                    { char: "茶", pinyin: "chá", meaning: "trà", tips: "艹 (thảo - cỏ) + 人 (nhân) + 木 (mộc - cây) => người hái lá trà trên cây." },
-                    { char: "谢谢", pinyin: "xièxie", meaning: "cảm ơn", tips: "讠 (ngôn) + 身 (thân) + 寸 (thốn) => lời nói từ thân => cảm ơn (lặp lại)." },
-                    { char: "不客气", pinyin: "bú kèqi", meaning: "đừng khách sáo", tips: "不 (bất) + 客气 (khách khí)." },
-                    { char: "客气", pinyin: "kèqi", meaning: "khách sáo", tips: "客 (khách, 宀 miên + 各 các) + 气 (khí)." },
-                    { char: "工作", pinyin: "gōngzuò", meaning: "công việc; làm việc", tips: "工 (công) + 作 (tác, 亻 nhân + 乍 tác)." },
-                    { char: "身体", pinyin: "shēntǐ", meaning: "thân thể, sức khỏe", tips: "身 (thân) + 体 (thể, 亻 nhân + 本 bản)." }
-                ]
-            },
-            6: {
-                title: "Bài 6: 我学习汉语 (Wǒ xuéxí Hànyǔ - Tôi học tiếng Hán)",
-                words: [
-                    { char: "学习", pinyin: "xuéxí", meaning: "học tập", tips: "学 (học) + 习 (tập, 羽 vũ - lông vũ + 白 bạch) => học và luyện tập." },
-                    { char: "觉得", pinyin: "juéde", meaning: "cảm thấy", tips: "觉 (giác, 見 kiến - thấy) + 得 (đắc)." },
-                    { char: "语法", pinyin: "yǔfǎ", meaning: "ngữ pháp", tips: "语 (ngữ) + 法 (pháp, 氵 thủy)." },
-                    { char: "听", pinyin: "tīng", meaning: "nghe", tips: "口 (khẩu) + 斤 (cân) => dùng tai (ẩn dụ bằng cân) để nghe." },
-                    { char: "说", pinyin: "shuō", meaning: "nói", tips: "讠 (ngôn) + 兑 (đoái - đổi) => dùng lời để trao đổi." },
-                    { char: "比较", pinyin: "bǐjiào", meaning: "tương đối, khá", tips: "比 (tỉ - so sánh) + 较 (giảo - so sánh, 车 xa)." },
-                    { char: "容易", pinyin: "róngyì", meaning: "dễ dàng", tips: "容 (dung - chứa đựng, 宀 miên) + 易 (dị/dịch - dễ, 日 nhật + 勿 vật)." },
-                    { char: "读", pinyin: "dú", meaning: "đọc", tips: "讠 (ngôn) + 卖 (mại - bán, âm) => đọc thành tiếng." },
-                    { char: "写", pinyin: "xiě", meaning: "viết", tips: "冖 (mịch - mái nhà) + ? (phần dưới phức tạp) => viết dưới mái nhà." },
-                    { char: "但是", pinyin: "dànshì", meaning: "nhưng", tips: "但 (đãn - nhưng, 亻 nhân) + 是 (thị - là)." },
-                    { char: "给", pinyin: "gěi", meaning: "cho", tips: "纟 (mịch - sợi tơ) + 合 (hợp) => đưa, cho." },
-                    { char: "新", pinyin: "xīn", meaning: "mới", tips: "立 (lập) + 木 (mộc) + 斤 (cân) => dùng rìu (cân) đốn cây (mộc) làm cái mới (lập)." },
-                    { char: "同学", pinyin: "tóngxué", meaning: "bạn học", tips: "同 (đồng - cùng, 冂 quynh + 口 khẩu) + 学 (học)." },
-                    { char: "同屋", pinyin: "tóngwū", meaning: "bạn cùng phòng", tips: "同 (đồng) + 屋 (ốc - nhà, 尸 thi + 至 chí)." },
-                    { char: "班", pinyin: "bān", meaning: "lớp", tips: "王 (vương) x 2 + 刂 (đao) => chia (đao) ngọc (vương) thành lớp." },
-                    { char: "北京语言大学", pinyin: "Běijīng Yǔyán Dàxué", meaning: "Đại học Ngôn ngữ Bắc Kinh", tips: "北京 (Bắc Kinh) + 语言 (Ngôn ngữ) + 大学 (Đại học)." },
-                    { char: "林娜", pinyin: "Lín Nà", meaning: "Lâm Na (tên người)", tips: "林 (Lâm - rừng, 木 mộc x 2) + 娜 (Na - đẹp, 女 nữ)." }
-                ]
-            },
-            7: {
-                title: "Bài 7: 你吃什么 (Nǐ chī shénme - Bạn ăn gì?)",
-                words: [
-                    { char: "中午", pinyin: "zhōngwǔ", meaning: "buổi trưa", tips: "中 (trung - giữa) + 午 (ngọ - trưa, 干 can)." },
-                    { char: "吃", pinyin: "chī", meaning: "ăn", tips: "口 (khẩu) + 乞 (khất - xin) => miệng ăn." },
-                    { char: "饭", pinyin: "fàn", meaning: "cơm", tips: "饣 (thực - đồ ăn) + 反 (phản - trái lại, âm)." },
-                    { char: "食堂", pinyin: "shítáng", meaning: "nhà ăn", tips: "食 (thực - ăn) + 堂 (đường - nhà lớn, 土 thổ)." },
-                    { char: "馒头", pinyin: "mántou", meaning: "bánh màn thầu", tips: "馒 (man, 饣 thực) + 头 (đầu)." },
-                    { char: "米饭", pinyin: "mǐfàn", meaning: "cơm (gạo)", tips: "米 (mễ - gạo) + 饭 (phạn - cơm)." },
-                    { char: "米", pinyin: "mǐ", meaning: "gạo", tips: "Hình bông lúa có hạt." },
-                    { char: "要", pinyin: "yào", meaning: "muốn, cần", tips: "西 (tây) + 女 (nữ) => phụ nữ muốn." },
-                    { char: "个", pinyin: "ge", meaning: "cái, chiếc (lượng từ)", tips: "人 (nhân) + 丨 (cổn - nét sổ) => một người/cái." },
-                    { char: "碗", pinyin: "wǎn", meaning: "bát", tips: "石 (thạch - đá) + 宛 (uyển - cong) => bát làm từ đá (gốm)." },
-                    { char: "鸡蛋", pinyin: "jīdàn", meaning: "trứng gà", tips: "鸡 (kê - gà) + 蛋 (đản - trứng)." },
-                    { char: "鸡", pinyin: "jī", meaning: "gà", tips: "又 (hựu - tay) + 鸟 (điểu - chim) => con chim bắt bằng tay => gà." },
-                    { char: "蛋", pinyin: "dàn", meaning: "trứng", tips: "疋 (thất - cuộn vải) + 虫 (trùng) => trứng côn trùng (ẩn dụ)." },
-                    { char: "汤", pinyin: "tāng", meaning: "canh", tips: "氵 (thủy) + 昜 (dương - mặt trời) => nước nóng như mặt trời => canh." },
-                    { char: "啤酒", pinyin: "píjiǔ", meaning: "bia", tips: "啤 (pi - âm, 口 khẩu) + 酒 (tửu - rượu)." },
-                    { char: "酒", pinyin: "jiǔ", meaning: "rượu", tips: "氵 (thủy) + 酉 (dậu - bình rượu) => rượu là chất lỏng." },
-                    { char: "这些", pinyin: "zhèxiē", meaning: "những cái này", tips: "这 (giá - này) + 些 (ta - một ít)." },
-                    { char: "一些", pinyin: "yìxiē", meaning: "một ít, một vài", tips: "一 (nhất) + 些 (ta)." },
-                    { char: "那些", pinyin: "nàxiē", meaning: "những cái kia", tips: "那 (ná - kia) + 些 (ta)." },
-                    { char: "饺子", pinyin: "jiǎozi", meaning: "bánh chẻo (sủi cảo)", tips: "饺 (giảo, 饣 thực) + 子 (tử)." },
-                    { char: "包子", pinyin: "bāozi", meaning: "bánh bao", tips: "包 (bao - gói) + 子 (tử)." },
-                    { char: "面条儿", pinyin: "miàntiáor", meaning: "mì sợi", tips: "面 (diện - bột mì) + 条 (điều - sợi) + 儿 (nhi)." }
-                ]
-            },
-            8: {
-                title: "Bài 8: 苹果一斤多少钱 (Píngguǒ yì jīn duōshao qián - Táo một cân bao nhiêu tiền?)",
-                words: [
-                    { char: "苹果", pinyin: "píngguǒ", meaning: "quả táo", tips: "苹 (bình, 艹 thảo) + 果 (quả, 木 mộc)." },
-                    { char: "斤", pinyin: "jīn", meaning: "cân (đơn vị TQ ≈ 0.5kg)", tips: "Hình cái rìu (cân)." },
-                    { char: "多少", pinyin: "duōshao", meaning: "bao nhiêu", tips: "多 (đa - nhiều) + 少 (thiểu - ít)." },
-                    { char: "多", pinyin: "duō", meaning: "nhiều", tips: "夕 (tịch - đêm) + 夕 (tịch) => nhiều đêm => nhiều." },
-                    { char: "少", pinyin: "shǎo", meaning: "ít", tips: "小 (tiểu - nhỏ) + 丿 (phiệt - nét phẩy) => ít." },
-                    { char: "块", pinyin: "kuài", meaning: "đồng (tiền tệ); miếng", tips: "土 (thổ - đất) + 夬 (quải - quyết) => miếng đất => đồng tiền." },
-                    { char: "元", pinyin: "yuán", meaning: "đồng (tiền tệ)", tips: "二 (nhị) + 儿 (nhân đi) => đơn vị cơ bản." },
-                    { char: "角", pinyin: "jiǎo", meaning: "hào (1/10 đồng); góc", tips: "Hình cái sừng/góc." },
-                    { char: "毛", pinyin: "máo", meaning: "hào (1/10 đồng); lông", tips: "Hình cái lông." },
-                    { char: "分", pinyin: "fēn", meaning: "xu (1/100 đồng); phút; chia", tips: "八 (bát) + 刀 (đao) => dùng dao chia làm tám => chia, phút, xu." },
-                    { char: "还", pinyin: "hái", meaning: "còn, vẫn", tips: "辶 (sước - đi) + 不 (bất) => đi chưa hết => vẫn còn." },
-                    { char: "别的", pinyin: "biéde", meaning: "cái khác", tips: "别 (biệt - khác, 刂 đao) + 的 (đích)." },
-                    { char: "橘子", pinyin: "júzi", meaning: "quả quýt", tips: "橘 (quất, 木 mộc) + 子 (tử)." },
-                    { char: "怎么", pinyin: "zěnme", meaning: "như thế nào, sao mà", tips: "怎 (chẩm - sao, 心 tâm) + 么 (ma)." },
-                    { char: "卖", pinyin: "mài", meaning: "bán", tips: "士 (sĩ) + 买 (mãi - mua) => người bán (ngược với mua)." },
-                    { char: "两", pinyin: "liǎng", meaning: "hai (dùng với lượng từ)", tips: "Một dạng của 二 (nhị), dùng trước lượng từ." },
-                    { char: "一共", pinyin: "yígòng", meaning: "tổng cộng", tips: "一 (nhất) + 共 (cộng - cùng, 八 bát)." },
-                    { char: "找", pinyin: "zhǎo", meaning: "tìm; trả lại (tiền thừa)", tips: "扌 (thủ - tay) + 戈 (qua - vũ khí) => dùng tay tìm kiếm." }
-                ]
-            }
-        };
+    // --- Global Variables ---
+    let currentCardIndex = 0;
+    let currentFlashcards = [];
+    let isFlipped = false;
+    let allWords = []; // Sẽ chứa tất cả các từ học từ bài 1 đến 8
+    let wordCategories = { subjects: [], verbs: [], objects: [], adjectives: [], adverbs: [], particles: [], places: [], others: [] };
 
-        // --- Global Variables ---
-        let currentCardIndex = 0;
-        let currentFlashcards = [];
-        let isFlipped = false;
-        let allWords = []; // For sentence generator
-        // Word categories for random sentence generator
-        let wordCategories = {
-            subjects: [],
-            verbs: [],
-            objects: [],
-            adjectives: [], // Added adjectives category
-            adverbs: [], // Added adverbs category
-            particles: [], // Added particles category
-            places: [], // Added places category
-            others: [] // Catch-all for remaining useful words
-        };
-
-
-        // --- DOM Elements ---
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const lessonSectionsContainer = document.getElementById('lesson-sections');
-        const lessonSelectFlashcard = document.getElementById('lesson-select-flashcard');
-        const loadFlashcardsButton = document.getElementById('load-flashcards');
-        const shuffleFlashcardsButton = document.getElementById('shuffle-flashcards');
-        const flashcardArea = document.getElementById('flashcard-area');
-        const flashcardUI = document.getElementById('flashcard-ui');
-        const flashcardPlaceholder = document.getElementById('flashcard-placeholder');
-        const flashcardElement = document.getElementById('flashcard');
-        const flashcardFrontContent = document.getElementById('flashcard-front-content');
-        const flashcardBackContent = document.getElementById('flashcard-back-content');
-        const prevCardButton = document.getElementById('prev-card');
-        const nextCardButton = document.getElementById('next-card');
-        const cardCounter = document.getElementById('card-counter');
-
-        // Sentence Generator Elements
-        const sgSubjectSelect = document.getElementById('sg-subject');
-        const sgVerbSelect = document.getElementById('sg-verb');
-        const sgObjectSelect = document.getElementById('sg-object');
-        const sgOtherSelect = document.getElementById('sg-other');
-        const generatedSentenceContainer = document.getElementById('generated-sentence');
-        const clearSentenceButton = document.getElementById('clear-sentence');
-        // Random Sentence Elements
-        const randomSentenceButton = document.getElementById('random-sentence-button');
-        const randomSentenceOutput = document.getElementById('random-sentence-output');
-
-
-        // --- Functions ---
-
-        // Function to switch tabs
-        function switchTab(event) {
-            const targetTab = event.currentTarget.getAttribute('data-tab');
-            tabButtons.forEach(button => button.classList.toggle('active', button.getAttribute('data-tab') === targetTab));
-            tabContents.forEach(content => content.classList.toggle('active', content.id === targetTab));
-        }
-
-        // Function to generate lesson review sections and populate word lists
-        function generateLessonReview() {
-            lessonSectionsContainer.innerHTML = '';
-            lessonSelectFlashcard.innerHTML = '';
-            const uniqueWords = new Map();
-
-            Object.entries(vocabularyData).forEach(([lessonNum, lessonData]) => {
-                const section = document.createElement('div');
-                section.classList.add('mb-8');
-                section.innerHTML = `<h3 class="text-lg font-semibold mb-3 border-b border-red-200 pb-1 text-red-700">${lessonData.title} (Bài ${lessonNum})</h3>`; // Red border/text
-
-                const table = document.createElement('table');
-                table.classList.add('w-full', 'border-collapse', 'vocab-table');
-                table.innerHTML = `
-                    <thead class="bg-red-100">
-                        <tr>
-                            <th>Chữ Hán</th>
-                            <th>Phiên âm</th>
-                            <th>Nghĩa Tiếng Việt</th>
-                            <th>Mẹo ghi nhớ</th>
-                        </tr>
-                    </thead>`;
-                const tbody = document.createElement('tbody');
-                lessonData.words.forEach(word => {
-                    const row = tbody.insertRow();
-                    row.innerHTML = `
-                        <td class="char-cell">${word.char}</td>
-                        <td>${word.pinyin}</td>
-                        <td>${word.meaning}</td>
-                        <td>${word.tips || 'N/A'}</td>`;
-                    if (!uniqueWords.has(word.char)) {
-                        uniqueWords.set(word.char, word);
-                    }
-                });
-                table.appendChild(tbody);
-                section.appendChild(table);
-                lessonSectionsContainer.appendChild(section);
-
-                const option = document.createElement('option');
-                option.value = lessonNum;
-                let lessonTitleVietnamese = `Bài ${lessonNum}`;
-                const titleParts = lessonData.title.split('–');
-                if (titleParts.length > 1) lessonTitleVietnamese = `Bài ${lessonNum}: ${titleParts[1].trim()}`;
-                else {
-                    const titlePartsColon = lessonData.title.split(':');
-                    if (titlePartsColon.length > 1) lessonTitleVietnamese = `Bài ${lessonNum}: ${titlePartsColon[1].trim().split('(')[0].trim()}`;
-                }
-                option.textContent = lessonTitleVietnamese;
-                lessonSelectFlashcard.appendChild(option);
-            });
-
-            allWords = Array.from(uniqueWords.values());
-            categorizeWords(); // Categorize words for random generator
-            populateSentenceGeneratorOptions(); // Populate dropdowns for manual builder
-        }
-
-        // Function to categorize words for the random sentence generator
-        function categorizeWords() {
-            // Define keywords or characters for categorization (can be expanded)
-            const subjectChars = ['你', '我', '他', '她', '您', '老师', '同学', '同屋', '林娜'];
-            const verbChars = ['是', '去', '学', '见', '喝', '坐', '进', '取', '回', '工作', '学习', '觉得', '听', '说', '读', '写', '给', '吃', '要', '卖', '找'];
-            const objectChars = ['汉语', '英语', '茶', '钱', '饭', '食堂', '馒头', '米饭', '米', '碗', '鸡蛋', '汤', '啤酒', '酒', '饺子', '包子', '面条儿', '语法', '班', '苹果', '橘子'];
-            const adjectiveChars = ['好', '难', '忙', '容易', '新', '多', '少']; // Added adjectives
-            const adverbChars = ['不', '太', '很', '比较', '还', '一共']; // Added adverbs
-            const particleChars = ['吗', '的', '了', '吧', '呢', '个', '些', '块', '元', '角', '毛', '分', '斤', '两']; // Added particles/measure words
-            const placeChars = ['学校', '银行', '哪儿', '北京语言大学']; // Added places
-
-            wordCategories = { subjects: [], verbs: [], objects: [], adjectives: [], adverbs: [], particles: [], places: [], others: [] }; // Reset
-
-            allWords.forEach(word => {
-                if (subjectChars.includes(word.char)) wordCategories.subjects.push(word);
-                else if (verbChars.includes(word.char)) wordCategories.verbs.push(word);
-                else if (objectChars.includes(word.char)) wordCategories.objects.push(word);
-                else if (adjectiveChars.includes(word.char)) wordCategories.adjectives.push(word);
-                else if (adverbChars.includes(word.char)) wordCategories.adverbs.push(word);
-                else if (particleChars.includes(word.char)) wordCategories.particles.push(word);
-                else if (placeChars.includes(word.char)) wordCategories.places.push(word);
-                // Add other useful single/double characters to 'others'
-                else if (word.char.length <= 2 && !['对不起', '没关系', '谢谢', '不客气', '再见', '多少', '怎么', '别的'].includes(word.char)) {
-                     wordCategories.others.push(word);
-                }
-            });
-
-            // Ensure categories are not empty, add fallback if needed (e.g., add '我' if subjects is empty)
-             if (wordCategories.subjects.length === 0) wordCategories.subjects.push({ char: '我', pinyin: 'wǒ', meaning: 'tôi' });
-             if (wordCategories.verbs.length === 0) wordCategories.verbs.push({ char: '是', pinyin: 'shì', meaning: 'là' });
-             if (wordCategories.objects.length === 0) wordCategories.objects.push({ char: '汉语', pinyin: 'hànyǔ', meaning: 'tiếng Hán' });
-             if (wordCategories.adjectives.length === 0) wordCategories.adjectives.push({ char: '好', pinyin: 'hǎo', meaning: 'tốt' });
-        }
-
-
-        // Function to populate sentence generator dropdowns (Manual Builder)
-        function populateSentenceGeneratorOptions() {
-            const populateSelect = (selectElement, category) => {
-                selectElement.innerHTML = '<option value="">-- Chọn --</option>';
-                const wordsToPopulate = category === 'objects' ? allWords.filter(w => w.char.length <= 2) : wordCategories[category] || []; // Use categorized words, broader for objects
-
-                wordsToPopulate.forEach(word => {
-                    const option = document.createElement('option');
-                    option.value = word.char;
-                    option.textContent = `${word.char} (${word.pinyin}) - ${word.meaning}`;
-                    selectElement.appendChild(option);
-                });
-                 // Add common words manually if needed
-                 if(category === 'others') {
-                     ['的', '吗', '不', '很', '太'].forEach(char => {
-                         if (!wordsToPopulate.some(w => w.char === char)) {
-                             const option = document.createElement('option');
-                             option.value = char; option.textContent = char; selectElement.appendChild(option);
-                         }
-                     })
-                 }
-            };
-
-            populateSelect(sgSubjectSelect, 'subjects');
-            populateSelect(sgVerbSelect, 'verbs');
-            populateSelect(sgObjectSelect, 'objects'); // Populate objects more broadly
-            populateSelect(sgOtherSelect, 'others'); // Populate with adverbs, particles etc.
-        }
-
-        // Function to update the manually generated sentence display
-        function updateGeneratedSentence() {
-            generatedSentenceContainer.innerHTML = '';
-            let sentenceBuilt = false;
-            const addPart = (selectElement) => {
-                const value = selectElement.value;
-                if (value) {
-                    const span = document.createElement('span');
-                    span.classList.add('sentence-part');
-                    span.textContent = value;
-                    generatedSentenceContainer.appendChild(span);
-                    sentenceBuilt = true;
-                }
-            };
-            addPart(sgSubjectSelect);
-            addPart(sgVerbSelect);
-            addPart(sgObjectSelect);
-            addPart(sgOtherSelect);
-            if (!sentenceBuilt) {
-                generatedSentenceContainer.innerHTML = '<span class="text-gray-400 italic">Chọn các từ ở trên để tạo câu.</span>';
-            }
-        }
-
-        // Function to get a random element from an array
-        function getRandomElement(arr) {
-            if (!arr || arr.length === 0) return null;
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
-        // --- NEW: Function to generate a random sentence ---
-        function generateRandomSentence() {
-            randomSentenceOutput.innerHTML = ''; // Clear previous output
-            let sentence = []; // Array to hold word objects {char, pinyin, meaning}
-            let sentenceStructure = '';
-
-            // Define possible sentence structures
-            const structures = [
-                'S + V',
-                'S + V + O',
-                'S + Adv + V',
-                'S + Adv + Adj',
-                'S + V + Place',
-                'S + V + O + Particle',
-                'S + 是 + O',
-                 'O + S + V + Particle?' // Topic-comment like structure
-            ];
-            sentenceStructure = getRandomElement(structures);
-
-            // Get random words based on structure
-            let subject = getRandomElement(wordCategories.subjects);
-            let verb = getRandomElement(wordCategories.verbs);
-            let object = getRandomElement(wordCategories.objects);
-            let adverb = getRandomElement(wordCategories.adverbs);
-            let adjective = getRandomElement(wordCategories.adjectives);
-            let place = getRandomElement(wordCategories.places);
-            let particle = getRandomElement(wordCategories.particles.filter(p => ['吗', '呢', '吧', '了'].includes(p.char))); // Filter for sentence ending particles
-
-            // Build the sentence array based on the chosen structure
-            // Ensure required parts are available
-            if (!subject || !verb) {
-                randomSentenceOutput.innerHTML = '<p class="text-red-600 italic">Không đủ từ để tạo câu. Hãy thử lại.</p>';
-                return;
-            }
-
-            switch (sentenceStructure) {
-                case 'S + V':
-                    sentence.push(subject, verb);
-                    break;
-                case 'S + V + O':
-                    if (object) sentence.push(subject, verb, object);
-                    else sentence.push(subject, verb); // Fallback if no object
-                    break;
-                case 'S + Adv + V':
-                    if (adverb) sentence.push(subject, adverb, verb);
-                    else sentence.push(subject, verb); // Fallback
-                    break;
-                case 'S + Adv + Adj':
-                     // Common structure S + 很 + Adj
-                    const henAdverb = wordCategories.adverbs.find(w => w.char === '很') || adverb || { char: '很', pinyin: 'hěn', meaning: 'rất' }; // Default to 很 if available
-                    if (adjective) sentence.push(subject, henAdverb, adjective);
-                    else sentence.push(subject, verb); // Fallback to S+V
-                    break;
-                case 'S + V + Place':
-                    if (place) sentence.push(subject, verb, place);
-                    else sentence.push(subject, verb); // Fallback
-                    break;
-                 case 'S + V + O + Particle':
-                     if (object && particle) sentence.push(subject, verb, object, particle);
-                     else if (object) sentence.push(subject, verb, object);
-                     else sentence.push(subject, verb); // Fallback
-                     break;
-                 case 'S + 是 + O':
-                     const shiVerb = wordCategories.verbs.find(w => w.char === '是') || verb;
-                     if (object) sentence.push(subject, shiVerb, object);
-                     else sentence.push(subject, verb); // Fallback
-                     break;
-                 case 'O + S + V + Particle?': // e.g., 苹果我吃了
-                     if (object) {
-                         sentence.push(object, subject, verb);
-                         if (particle && particle.char === '了' && Math.random() > 0.5) { // Sometimes add 了
-                             sentence.push(particle);
-                         }
-                     } else {
-                          sentence.push(subject, verb); // Fallback
-                     }
-                     break;
-                default:
-                    sentence.push(subject, verb); // Default fallback
-            }
-
-            // Filter out any null elements that might have resulted from missing categories
-            sentence = sentence.filter(word => word !== null && word !== undefined);
-
-            if (sentence.length < 2) {
-                 randomSentenceOutput.innerHTML = '<p class="text-red-600 italic">Không tạo được câu hợp lệ. Hãy thử lại.</p>';
-                 return;
-            }
-
-            // Display the sentence with details
-            const sentenceDiv = document.createElement('div');
-            sentenceDiv.classList.add('flex', 'flex-wrap', 'items-center', 'mb-2');
-            sentence.forEach(word => {
-                const wordSpan = document.createElement('span');
-                wordSpan.classList.add('random-word-detail');
-                wordSpan.innerHTML = `
-                    <span class="random-word-char">${word.char}</span>
-                    (<span class="random-word-pinyin">${word.pinyin}</span> -
-                    <span class="random-word-meaning">${word.meaning}</span>)
-                `;
-                sentenceDiv.appendChild(wordSpan);
-            });
-            randomSentenceOutput.appendChild(sentenceDiv);
-
-             // Display the raw sentence as well
-             const rawSentenceP = document.createElement('p');
-             rawSentenceP.classList.add('text-lg', 'font-semibold', 'text-red-800', 'mt-2');
-             rawSentenceP.textContent = sentence.map(w => w.char).join('');
-             randomSentenceOutput.appendChild(rawSentenceP);
-
-        }
-
-
-        // Function to shuffle an array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        // Function to load flashcards
-        function loadFlashcards() {
-            currentFlashcards = [];
-            const selectedOptions = Array.from(lessonSelectFlashcard.selectedOptions);
-            if (selectedOptions.length === 0) {
-                flashcardPlaceholder.textContent = "Vui lòng chọn ít nhất một bài học.";
-                flashcardUI.classList.add('hidden');
-                flashcardPlaceholder.classList.remove('hidden');
-                return;
-            }
-            selectedOptions.forEach(option => {
-                const lessonNum = option.value;
-                if (vocabularyData[lessonNum]) currentFlashcards.push(...vocabularyData[lessonNum].words);
-            });
-            if (currentFlashcards.length === 0) {
-                 flashcardPlaceholder.textContent = "Không tìm thấy từ vựng cho (các) bài học đã chọn.";
-                 flashcardUI.classList.add('hidden');
-                 flashcardPlaceholder.classList.remove('hidden');
-                 return;
-            }
-            currentCardIndex = 0;
-            isFlipped = false;
-            flashcardElement.classList.remove('flipped');
-            displayCard();
-            flashcardUI.classList.remove('hidden');
-            flashcardPlaceholder.classList.add('hidden');
-        }
-
-        // Function to shuffle current flashcards
-         function shuffleCurrentFlashcards() {
-            if (currentFlashcards.length > 1) {
-                shuffleArray(currentFlashcards);
-                currentCardIndex = 0;
-                isFlipped = false;
-                flashcardElement.classList.remove('flipped');
-                displayCard();
-            }
-         }
-
-        // Function to display the current card
-        function displayCard() {
-            if (currentFlashcards.length === 0) return;
-            const card = currentFlashcards[currentCardIndex];
-            flashcardFrontContent.innerHTML = `<p class="flashcard-char">${card.char}</p><p class="flashcard-pinyin">${card.pinyin}</p>`;
-            flashcardBackContent.innerHTML = `<p class="flashcard-meaning">${card.meaning}</p><div class="flashcard-tips">${card.tips || 'N/A'}</div>`;
-            cardCounter.textContent = `${currentCardIndex + 1} / ${currentFlashcards.length}`;
-        }
-
-        // Function to flip the card
-        function flipCard() {
-             if (currentFlashcards.length === 0) return;
-            isFlipped = !isFlipped;
-            flashcardElement.classList.toggle('flipped');
-        }
-
-        // Function to show the next card
-        function showNextCard() {
-             if (currentFlashcards.length === 0) return;
-            currentCardIndex = (currentCardIndex + 1) % currentFlashcards.length;
-            isFlipped = false;
-            flashcardElement.classList.remove('flipped');
-            displayCard();
-        }
-
-        // Function to show the previous card
-        function showPrevCard() {
-             if (currentFlashcards.length === 0) return;
-            currentCardIndex = (currentCardIndex - 1 + currentFlashcards.length) % currentFlashcards.length;
-            isFlipped = false;
-            flashcardElement.classList.remove('flipped');
-            displayCard();
-        }
-
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            generateLessonReview(); // Initial setup
-
-            tabButtons.forEach(button => button.addEventListener('click', switchTab));
-
-            loadFlashcardsButton.addEventListener('click', loadFlashcards);
-            shuffleFlashcardsButton.addEventListener('click', shuffleCurrentFlashcards);
-            nextCardButton.addEventListener('click', showNextCard);
-            prevCardButton.addEventListener('click', showPrevCard);
-
-             const sgSelects = document.querySelectorAll('.sg-select');
-             sgSelects.forEach(select => select.addEventListener('change', updateGeneratedSentence));
-             clearSentenceButton.addEventListener('click', () => {
-                 sgSelects.forEach(select => select.value = '');
-                 updateGeneratedSentence();
-             });
-
-             // Add listener for the new random sentence button
-             randomSentenceButton.addEventListener('click', generateRandomSentence);
+    // --- Phân loại các từ dựa trên danh sách (theo giá trị "char") ---
+    function generateLessonReview() {
+      const lessonSectionsContainer = document.getElementById('lesson-sections');
+      const lessonSelectFlashcard = document.getElementById('lesson-select-flashcard');
+      lessonSectionsContainer.innerHTML = '';
+      lessonSelectFlashcard.innerHTML = '';
+      const uniqueWords = new Map();
+      Object.entries(vocabularyData).forEach(([lessonNum, lessonData]) => {
+        const section = document.createElement('div');
+        section.classList.add('mb-8');
+        section.innerHTML = `<h3 class="text-lg font-semibold mb-3 border-b border-red-200 pb-1 text-red-700">${lessonData.title} (Bài ${lessonNum})</h3>`;
+        const table = document.createElement('table');
+        table.classList.add('w-full', 'border-collapse', 'vocab-table');
+        table.innerHTML = `
+          <thead class="bg-red-100">
+            <tr>
+              <th>Chữ Hán</th>
+              <th>Phiên âm</th>
+              <th>Nghĩa Tiếng Việt</th>
+              <th>Mẹo ghi nhớ</th>
+            </tr>
+          </thead>`;
+        const tbody = document.createElement('tbody');
+        lessonData.words.forEach(word => {
+          const row = tbody.insertRow();
+          row.innerHTML = `
+            <td class="char-cell">${word.char}</td>
+            <td>${word.pinyin}</td>
+            <td>${word.meaning}</td>
+            <td>${word.tips || 'N/A'}</td>`;
+          if (!uniqueWords.has(word.char)) {
+            uniqueWords.set(word.char, word);
+          }
         });
+        table.appendChild(tbody);
+        section.appendChild(table);
+        lessonSectionsContainer.appendChild(section);
 
-    </script>
+        const option = document.createElement('option');
+        option.value = lessonNum;
+        let lessonTitleVietnamese = `Bài ${lessonNum}`;
+        const titleParts = lessonData.title.split('–');
+        if (titleParts.length > 1)
+          lessonTitleVietnamese = `Bài ${lessonNum}: ${titleParts[1].trim()}`;
+        else {
+          const titlePartsColon = lessonData.title.split(':');
+          if (titlePartsColon.length > 1)
+            lessonTitleVietnamese = `Bài ${lessonNum}: ${titlePartsColon[1].trim().split('(')[0].trim()}`;
+        }
+        option.textContent = lessonTitleVietnamese;
+        lessonSelectFlashcard.appendChild(option);
+      });
+      allWords = Array.from(uniqueWords.values());
+      categorizeWords();
+      populateSentenceGeneratorOptions();
+    }
 
+    // --- Phân loại các từ thành các nhóm dựa trên “char” ---
+    function categorizeWords() {
+      const subjectChars = ['你', '我', '他', '她', '您', '老师', '同学', '同屋', '林娜'];
+      const verbChars = ['是', '去', '学', '见', '喝', '坐', '进', '取', '回', '工作', '学习', '觉得', '听', '说', '读', '写', '给', '吃', '要', '卖', '找'];
+      const objectChars = ['汉语', '英语', '茶', '钱', '饭', '食堂', '馒头', '米饭', '米', '碗', '鸡蛋', '汤', '啤酒', '酒', '饺子', '包子', '面条儿', '语法', '班', '苹果', '橘子'];
+      const adjectiveChars = ['好', '难', '忙', '容易', '新', '多', '少'];
+      const adverbChars = ['不', '太', '很', '比较', '还', '一共'];
+      const particleChars = ['吗', '的', '了', '吧', '呢', '个', '些', '块', '元', '角', '毛', '分', '斤', '两'];
+      const placeChars = ['学校', '银行', '哪儿', '北京语言大学'];
+      wordCategories = { subjects: [], verbs: [], objects: [], adjectives: [], adverbs: [], particles: [], places: [], others: [] };
+      allWords.forEach(word => {
+        if (subjectChars.includes(word.char)) wordCategories.subjects.push(word);
+        else if (verbChars.includes(word.char)) wordCategories.verbs.push(word);
+        else if (objectChars.includes(word.char)) wordCategories.objects.push(word);
+        else if (adjectiveChars.includes(word.char)) wordCategories.adjectives.push(word);
+        else if (adverbChars.includes(word.char)) wordCategories.adverbs.push(word);
+        else if (particleChars.includes(word.char)) wordCategories.particles.push(word);
+        else if (placeChars.includes(word.char)) wordCategories.places.push(word);
+        else if (word.char.length <= 2 && !['对不起', '没关系', '谢谢', '不客气', '再见', '多少', '怎么', '别的'].includes(word.char)) {
+          wordCategories.others.push(word);
+        }
+      });
+      if (wordCategories.subjects.length === 0) wordCategories.subjects.push({ char: '我', pinyin: 'wǒ', meaning: 'tôi' });
+      if (wordCategories.verbs.length === 0) wordCategories.verbs.push({ char: '是', pinyin: 'shì', meaning: 'là' });
+      if (wordCategories.objects.length === 0) wordCategories.objects.push({ char: '汉语', pinyin: 'hànyǔ', meaning: 'tiếng Hán' });
+      if (wordCategories.adjectives.length === 0) wordCategories.adjectives.push({ char: '好', pinyin: 'hǎo', meaning: 'tốt' });
+    }
+
+    // --- Populate các dropdown cho tạo câu thủ công ---
+    function populateSentenceGeneratorOptions() {
+      const populateSelect = (selectElement, category) => {
+        selectElement.innerHTML = '<option value="">-- Chọn --</option>';
+        const wordsToPopulate = (category === 'objects')
+          ? allWords.filter(w => w.char.length <= 2)
+          : wordCategories[category] || [];
+        wordsToPopulate.forEach(word => {
+          const option = document.createElement('option');
+          option.value = word.char;
+          option.textContent = `${word.char} (${word.pinyin}) - ${word.meaning}`;
+          selectElement.appendChild(option);
+        });
+        if (category === 'others') {
+          ['的', '吗', '不', '很', '太'].forEach(char => {
+            if (!wordsToPopulate.some(w => w.char === char)) {
+              const option = document.createElement('option');
+              option.value = char;
+              option.textContent = char;
+              selectElement.appendChild(option);
+            }
+          });
+        }
+      };
+      populateSelect(document.getElementById('sg-subject'), 'subjects');
+      populateSelect(document.getElementById('sg-verb'), 'verbs');
+      populateSelect(document.getElementById('sg-object'), 'objects');
+      populateSelect(document.getElementById('sg-other'), 'others');
+    }
+
+    // --- Cập nhật câu tạo thủ công ---
+    function updateGeneratedSentence() {
+      const generatedSentenceContainer = document.getElementById('generated-sentence');
+      generatedSentenceContainer.innerHTML = '';
+      let sentenceBuilt = false;
+      const addPart = (selectElement) => {
+        const value = selectElement.value;
+        if (value) {
+          const span = document.createElement('span');
+          span.classList.add('sentence-part');
+          span.textContent = value;
+          generatedSentenceContainer.appendChild(span);
+          sentenceBuilt = true;
+        }
+      };
+      document.querySelectorAll('.sg-select').forEach(select => addPart(select));
+      if (!sentenceBuilt) {
+        generatedSentenceContainer.innerHTML = '<span class="text-gray-400 italic">Chọn các từ ở trên để tạo câu.</span>';
+      }
+    }
+
+    // --- Hàm lấy phần tử ngẫu nhiên ---
+    function getRandomElement(arr) {
+      if (!arr || arr.length === 0) return null;
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    /*************************************
+     * Sinh câu ngẫu nhiên “có nghĩa”
+     * 1. Lấy chủ ngữ (S) từ danh mục subjects.
+     * 2. Chọn động từ (V) từ danh mục verbs mà có mapping với loại tân ngữ.
+     * 3. Dựa vào động từ đó, xác định loại tân ngữ cần thiết và chọn từ từ danh sách tương ứng.
+     * 4. Ghép thành câu S + V + O.
+     *************************************/
+    // Định nghĩa mapping: động từ => loại tân ngữ
+    const verbObjectMapping = {
+      "吃": "food",
+      "喝": "drink",
+      "去": "place",
+      "进": "place",
+      "见": "people"
+    };
+
+    // Định nghĩa danh sách các “từ” thuộc từng nhóm tân ngữ
+    const foodChars = ["馒头", "米饭", "饭", "鸡蛋", "面条儿", "饺子", "包子", "苹果", "橘子"];
+    const drinkChars = ["茶", "啤酒", "酒"];
+    const placeCharsForObjects = ["学校", "银行", "食堂", "北京语言大学"];
+    const peopleChars = ["老师", "同学", "同屋", "林娜", "你", "我", "他", "她"];
+
+    function generateRandomSentence() {
+      const randomSentenceOutput = document.getElementById('random-sentence-output');
+      randomSentenceOutput.innerHTML = '';
+
+      // Lấy chủ ngữ từ danh mục subjects
+      const subject = getRandomElement(wordCategories.subjects);
+      if (!subject) {
+        randomSentenceOutput.innerHTML = '<p class="text-red-600 italic">Không đủ dữ liệu cho chủ ngữ.</p>';
+        return;
+      }
+
+      // Lọc danh mục động từ chỉ có trong mapping
+      const candidateVerbs = wordCategories.verbs.filter(v => verbObjectMapping.hasOwnProperty(v.char));
+      const verb = getRandomElement(candidateVerbs);
+      if (!verb) {
+        randomSentenceOutput.innerHTML = '<p class="text-red-600 italic">Không đủ dữ liệu cho động từ.</p>';
+        return;
+      }
+
+      // Dựa vào động từ, xác định loại tân ngữ cần chọn
+      const objectType = verbObjectMapping[verb.char];
+      let objectCandidate = [];
+      if (objectType === "food") {
+        objectCandidate = allWords.filter(word => foodChars.includes(word.char));
+      } else if (objectType === "drink") {
+        objectCandidate = allWords.filter(word => drinkChars.includes(word.char));
+      } else if (objectType === "place") {
+        objectCandidate = allWords.filter(word => placeCharsForObjects.includes(word.char));
+      } else if (objectType === "people") {
+        objectCandidate = allWords.filter(word => peopleChars.includes(word.char));
+      }
+      const obj = getRandomElement(objectCandidate);
+      if (!obj) {
+        randomSentenceOutput.innerHTML = `<p class="text-red-600 italic">Không tìm thấy tân ngữ phù hợp cho động từ “${verb.char}”.</p>`;
+        return;
+      }
+
+      // Xây dựng câu: S + V + O
+      const sentence = [subject, verb, obj];
+
+      // Hiển thị chi tiết từng từ
+      const sentenceDiv = document.createElement('div');
+      sentenceDiv.classList.add('flex', 'flex-wrap', 'items-center', 'mb-2');
+      sentence.forEach(word => {
+        const wordSpan = document.createElement('span');
+        wordSpan.classList.add('random-word-detail');
+        wordSpan.innerHTML = `
+          <span class="random-word-char">${word.char}</span>
+          (<span class="random-word-pinyin">${word.pinyin}</span> -
+          <span class="random-word-meaning">${word.meaning}</span>)
+        `;
+        sentenceDiv.appendChild(wordSpan);
+      });
+      randomSentenceOutput.appendChild(sentenceDiv);
+
+      // Hiển thị câu thuần (chỉ các chữ Hán)
+      const rawSentenceP = document.createElement('p');
+      rawSentenceP.classList.add('text-lg', 'font-semibold', 'text-red-800', 'mt-2');
+      rawSentenceP.textContent = sentence.map(w => w.char).join('');
+      randomSentenceOutput.appendChild(rawSentenceP);
+    }
+
+    // --- Các hàm liên quan đến Flashcards ---
+    function loadFlashcards() {
+      const lessonSelectFlashcard = document.getElementById('lesson-select-flashcard');
+      const flashcardPlaceholder = document.getElementById('flashcard-placeholder');
+      const flashcardUI = document.getElementById('flashcard-ui');
+      currentFlashcards = [];
+      const selectedOptions = Array.from(lessonSelectFlashcard.selectedOptions);
+      if (selectedOptions.length === 0) {
+        flashcardPlaceholder.textContent = "Vui lòng chọn ít nhất một bài học.";
+        flashcardUI.classList.add('hidden');
+        flashcardPlaceholder.classList.remove('hidden');
+        return;
+      }
+      selectedOptions.forEach(option => {
+        const lessonNum = option.value;
+        if (vocabularyData[lessonNum]) currentFlashcards.push(...vocabularyData[lessonNum].words);
+      });
+      if (currentFlashcards.length === 0) {
+        flashcardPlaceholder.textContent = "Không tìm thấy từ vựng cho (các) bài học đã chọn.";
+        flashcardUI.classList.add('hidden');
+        flashcardPlaceholder.classList.remove('hidden');
+        return;
+      }
+      currentCardIndex = 0;
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      displayCard();
+      flashcardUI.classList.remove('hidden');
+      flashcardPlaceholder.classList.add('hidden');
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function shuffleCurrentFlashcards() {
+      if (currentFlashcards.length > 1) {
+        shuffleArray(currentFlashcards);
+        currentCardIndex = 0;
+        isFlipped = false;
+        document.getElementById('flashcard').classList.remove('flipped');
+        displayCard();
+      }
+    }
+
+    function displayCard() {
+      if (currentFlashcards.length === 0) return;
+      const card = currentFlashcards[currentCardIndex];
+      document.getElementById('flashcard-front-content').innerHTML = `<p class="flashcard-char">${card.char}</p><p class="flashcard-pinyin">${card.pinyin}</p>`;
+      document.getElementById('flashcard-back-content').innerHTML = `<p class="flashcard-meaning">${card.meaning}</p><div class="flashcard-tips">${card.tips || 'N/A'}</div>`;
+      document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${currentFlashcards.length}`;
+    }
+
+    function flipCard() {
+      if (currentFlashcards.length === 0) return;
+      isFlipped = !isFlipped;
+      document.getElementById('flashcard').classList.toggle('flipped');
+    }
+
+    function showNextCard() {
+      if (currentFlashcards.length === 0) return;
+      currentCardIndex = (currentCardIndex + 1) % currentFlashcards.length;
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      displayCard();
+    }
+
+    function showPrevCard() {
+      if (currentFlashcards.length === 0) return;
+      currentCardIndex = (currentCardIndex - 1 + currentFlashcards.length) % currentFlashcards.length;
+      isFlipped = false;
+      document.getElementById('flashcard').classList.remove('flipped');
+      displayCard();
+    }
+
+    function switchTab(event) {
+      const targetTab = event.currentTarget.getAttribute('data-tab');
+      document.querySelectorAll('.tab-button').forEach(button => button.classList.toggle('active', button.getAttribute('data-tab') === targetTab));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.toggle('active', content.id === targetTab));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      generateLessonReview();
+      document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', switchTab));
+      document.getElementById('load-flashcards').addEventListener('click', loadFlashcards);
+      document.getElementById('shuffle-flashcards').addEventListener('click', shuffleCurrentFlashcards);
+      document.getElementById('next-card').addEventListener('click', showNextCard);
+      document.getElementById('prev-card').addEventListener('click', showPrevCard);
+      document.querySelectorAll('.sg-select').forEach(select => select.addEventListener('change', updateGeneratedSentence));
+      document.getElementById('clear-sentence').addEventListener('click', () => {
+        document.querySelectorAll('.sg-select').forEach(select => select.value = '');
+        updateGeneratedSentence();
+      });
+      document.getElementById('random-sentence-button').addEventListener('click', generateRandomSentence);
+    });
+  </script>
 </body>
 </html>
